@@ -63,9 +63,16 @@ def update_rank(name, opp_rate, result)
   new_rank
 end
 
+def closest_rank_to(name, num_to_return = @data.size)
+  my_rating = rating_for(name)
+  @data.to_a.sort_by {|n, data| n == name ? 5000 : (data['rating'] - my_rating).abs }.map {|n, data| n}[0, num_to_return]
+end
+
+@names.each {|x| data_for(x) }
+
 while true
   name1 = random_name
-  name2 = random_name
+  name2 = closest_rank_to(name1, 20)[rand(20)]
   next if name1 == name2
   puts "\n\n1. #{name1}\n2. #{name2}\nWhich name is better? (3 for tie, x to stop the loop)"
   res = gets.chomp
