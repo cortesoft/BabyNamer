@@ -18,8 +18,8 @@ Sequel.migration do
       primary_key :id
       foreign_key :baby_name_id, :baby_names
       foreign_key :baby_list_id, :baby_lists
-      Fixnum :rating
-      Fixnum :count
+      Fixnum :rating, :default => 1500
+      Fixnum :count, :default => 0
       index [:baby_list_id, :rating]
     end
   end

@@ -34,15 +34,16 @@ namespace :db do
 
   desc "Migrate the DB"
   task :migrate, [:to_rev] do |t, args|
-    load_config
-    migration_files = File.expand_path(File.dirname(__FILE__)) + "/db"
-    puts "Migrating #{DB_NAME}#{args[:to_rev] ? " to rev #{args[:to_rev]}" : ""}"
-    `sequel -m #{migration_files}#{args[:to_rev] ? " -M #{args[:to_rev]}" : ""} mysql://#{DB_USERNAME}:#{DB_PASSWORD}@#{DB_HOST}/#{DB_NAME}`
+    Sequel.extension :migration
+    if args[:to_rev]
+      Sequel::Migrator.run(DB, "db", args[:to_rev].to_i)
+    else
+      Sequel::Migrator.run(DB, "db")
+    end
   end
 
   desc "Dump the DB to file"
   task :dump, [:outfile, :gzip] do |t, args|
-    load_config
     filepath = File.expand_path(args[:outfile])
     puts "Dumping database '#{DB_NAME}' to #{filepath}"
     puts `mysqldump -h #{DB_HOST} -u #{DB_USERNAME} -p#{DB_PASSWORD} #{DB_NAME} #{args[:gzip] ? "| gzip" : ""} > #{filepath}`

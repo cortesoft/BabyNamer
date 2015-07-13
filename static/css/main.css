@@ -1,0 +1,40 @@
+.centered {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: 25%;
+    width: 25%;
+}
+
+.clearFloat {
+  clear: both;
+}
+
+.floatLeft {
+  position: relative;
+  margin: 25px;
+  float: left;
+}
+.floatRight {
+  position: relative;
+  float: right;
+  padding-right: 14px;
+}
+
+.nameBlock {
+	border-style: solid;
+	border-color: green;
+	text-align: center;
+	width: 150px;
+	height: 30px;
+	padding: 15px;
+	cursor: pointer;
+	cursor: hand;
+}
+
+.nameBlock:hover {
+	background-color: yellow;
+}

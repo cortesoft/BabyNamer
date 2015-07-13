@@ -14,7 +14,7 @@ daemonize true
 
 rackup "#{DIR}/config.ru"
 
-BIND_HOSTS ||= {'0.0.0.0' => PORT}
+BIND_HOSTS ||= {'0.0.0.0' => 4000}
 BIND_HOSTS.each do |host, port|
   bind "tcp://#{host}:#{port}"
 end

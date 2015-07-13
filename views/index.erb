@@ -1,0 +1,62 @@
+<div id='list-selection'>
+	<% if @baby_lists.size > 0 %>
+	<div>
+		<h2>Choose an existing baby list to start ranking</h2>
+		<select id="existing-lists">
+			<% @baby_lists.each do |bl| %>
+				<option value="<%= bl.id %>">
+					<%= bl.name %>
+				</option>
+			<% end %>
+		</select>
+		<input type="submit" value="Start Ranking" id='start-ranking'>
+	</div>
+	
+	<div>
+		<h2>Choose an existing baby list to duplicate:</h2>
+		<select id="duplicate-list">
+			<% @baby_lists.each do |bl| %>
+				<option value="<%= bl.id %>">
+					<%= bl.name %>
+				</option>
+			<% end %>
+		</select>
+		<p>
+			New Name: <input type='text' id='new-name' />
+			<input type="submit" value="Duplicate" id='duplicate'>
+		</p>
+	</div>
+	<% end %>
+</div>
+<div id='name-choice' style="display: none;">
+	<h1 id="list-title"></h1>
+	<h2>Do you prefer:</h2>
+	<div class="floatLeft nameBlock" id='name1'>
+		None
+	</div>
+	<div class="floatLeft nameBlock" id='name2'>
+		None
+	</div>
+	<div class="floatLeft nameBlock" id='same'>
+		Same
+	</div>
+	<br class="clearFloat" />
+	<input type="submit" value="Display Current Results" id='display-results'>
+	<input type="submit" value="Back to List Select" class='back-to-list-select'>
+</div>
+<div id="results" style="display: none;">
+	<h2>Results so far:</h2>
+	<div id="results-html"></div>
+	<input type="submit" value="Back to Choices" class='back-to-choices'>
+	<input type="submit" value="Back to List Select" class='back-to-list-select'>
+</div>
+<script>
+	$("#start-ranking").click(startRanking);
+	$("#duplicate").click(duplicate);
+	$("#display-results").click(displayResults);
+	$("#name1").click(clickedOne);
+	$("#name2").click(clickedTwo);
+	$("#same").click(choseTie);
+	$(".back-to-choices").click(backToChoices);
+	$(".back-to-list-select").click(backToListSelect);
+</script>
