@@ -60,9 +60,9 @@ end
 get "/results/:id" do
   baby_list = BabyList[params[:id]]
   ratings = baby_list.baby_ratings_dataset.eager(:baby_name).order(:rating).all.reverse
-  res = "<table><tr><th>Name</th><th>Rating</th></tr>" +
+  res = "<table><tr><th>Name</th><th>Rating</th><th>Count</th></tr>" +
   ratings.map {|r|
-    "<tr><td>#{r.name}</td><td>#{r.rating}</td></tr>"
+    "<tr><td>#{r.name}</td><td>#{r.rating}</td><td>#{r.count}</td></tr>"
   }.join("\n") + "</table>"
   render_as_json({"html" => res})
 end
