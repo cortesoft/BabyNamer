@@ -109,7 +109,7 @@ startRanking = function(){
 }
 
 duplicate = function(){
-	getData("/duplicate_list/" + $("#duplicate-list").val(), function(data){
+	postData("/duplicate_list/" + $("#duplicate-list").val(), {name: $('#new-name').val()}, function(data){
 		listId = data.id;
 		getData("/display_choice/" + listId, displayChoice);
 	});
@@ -134,4 +134,15 @@ backToListSelect = function(){
 	$("#results").hide();
 	$("#name-choice").hide();
 	$("#list-selection").show();
+}
+
+uploadList = function(){
+	var list_data = {
+		list: $('#name-list-field').val(),
+		name: $('#upload-new-name').val()
+	};
+	postData("/create_list", list_data, function(data){
+		listId = data.id;
+		getData("/display_choice/" + listId, displayChoice);
+	});
 }

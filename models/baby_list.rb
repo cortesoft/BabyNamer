@@ -4,8 +4,7 @@ class BabyList < Sequel::Model
 
   #creates from an array of names
   def self.create_from_list(list_name, name_list, boy_names = false)
-    raise "A list with that name already exists!" if self.where(:name => list_name).count > 0
-    c = self.create(:name => list_name, :boys => boy_names)
+    c = self.create(:name => self.get_name(list_name), :boys => boy_names)
     new_names = name_list.dup
     #Find the names already created
     BabyName.where(:name => name_list, :boy => boy_names).all.each do |bn|
@@ -20,9 +19,17 @@ class BabyList < Sequel::Model
     c
   end
 
+  def self.get_name(wanted_name)
+    count = 1
+    actual_name = wanted_name
+    while self[:name => actual_name]
+      actual_name = wanted_name + "_#{count}"
+    end
+    actual_name
+  end
+
   def duplicate_list(new_name)
-    raise "A list with that name already exists!" if self.class.where(:name => new_name).count > 0
-    c = self.class.create(:name => new_name, :boys => self.boys)
+    c = self.class.create(:name => self.class.get_name(new_name), :boys => self.boys)
     self.baby_names.each do |bn|
       c.add_baby_rating(:baby_name => bn)
     end

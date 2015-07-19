@@ -57,6 +57,12 @@ post "/duplicate_list/:id" do
   render_as_json({"id" => new_list.id})
 end
 
+post "/create_list" do
+  parsed = JSON.parse(request.env["rack.input"].read)
+  new_list = BabyList.create_from_list(parsed["name"], parsed["list"].split(/[\n,]/).map {|x| x.strip} )
+  render_as_json({"id" => new_list.id})
+end
+
 get "/results/:id" do
   baby_list = BabyList[params[:id]]
   ratings = baby_list.baby_ratings_dataset.eager(:baby_name).order(:rating).all.reverse

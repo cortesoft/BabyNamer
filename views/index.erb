@@ -26,6 +26,16 @@
 			<input type="submit" value="Duplicate" id='duplicate'>
 		</p>
 	</div>
+	<div>
+		<h2>Paste a new list of names to create (comma or line separated):</h2>
+		<p>
+			List Name: <input type='text' id='upload-new-name' />
+		</p>
+		<textarea id="name-list-field" cols="30" rows="30">Paste list here</textarea>
+		<p>
+			<input type="submit" value="Upload" id='upload'>
+		</p>
+	</div>
 	<% end %>
 </div>
 <div id='name-choice' style="display: none;">
@@ -59,4 +69,5 @@
 	$("#same").click(choseTie);
 	$(".back-to-choices").click(backToChoices);
 	$(".back-to-list-select").click(backToListSelect);
+	$("#upload").click(uploadList);
 </script>
