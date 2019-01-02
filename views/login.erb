@@ -1,0 +1,15 @@
+<% if @errors %>
+<h2><%= @errors %></h2>
+<% end %>
+<form action="/login" method="post">
+<p>
+    Email: <input type='text' name='user[email]' />
+</p>
+<p>
+    Password: <input type='text' name='user[password]' />
+</p>
+<p>
+    <input type="submit" value="Login" />
+    <input type="submit" value="Create New Account" formaction="/create_account" />
+</p>
+</form>
