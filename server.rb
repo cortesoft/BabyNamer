@@ -9,10 +9,10 @@ require 'sinatra_warden'
 require 'erb'
 #require 'rack/flash'
 
-DB_NAME = 'baby_namer'
-DB_USERNAME = 'root'
-DB_HOST = 'localhost'
-DB_PASSWORD = 'root'
+DB_NAME = ENV['DB_NAME'] || 'baby_namer'
+DB_USERNAME =  ENV['DB_USERNAME'] || 'root'
+DB_HOST =  ENV['DB_HOST'] || 'localhost'
+DB_PASSWORD =  ENV['DB_PASSWORD'] || 'root'
 
 DB = Sequel.connect(:adapter => 'mysql2', :host => DB_HOST, :user => DB_USERNAME,
     :password => DB_PASSWORD, :database => DB_NAME)
@@ -27,8 +27,9 @@ class BabyNamer < Sinatra::Base
   set :public_folder, File.dirname(__FILE__) + "/static"
   register Sinatra::Warden
   set :auth_template_renderer, :erb
+  set :auth_failure_path, "/login"
 
-  use Rack::Session::Cookie
+  use Rack::Session::Cookie, :secret => (ENV['COOKIE_SECRET'] || 'ldkja8adj7sz6a')
   #use Rack::Flash, accessorize: [:error, :success]
   use Warden::Manager do |config|
     config.scope_defaults :default,

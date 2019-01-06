@@ -5,8 +5,8 @@ Warden::Strategies.add(:password) do
 
     def authenticate!
         user = User.authenticate(
-        params['user']['email'], 
-        params['user']['password']
+            params['user']['email'], 
+            params['user']['password']
         )
         user.nil? ? fail!('Could not log in') : success!(user, 'Successfully logged in')
     end
