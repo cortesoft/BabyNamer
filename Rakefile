@@ -24,6 +24,13 @@ namespace :puma do
   end
 end
 
+namespace :baby do
+  desc "Create the default lists if needed"
+  task :create_defaults do
+    BabyList.create_defaults
+  end
+end
+
 namespace :db do
 
   desc "Create the DB"
