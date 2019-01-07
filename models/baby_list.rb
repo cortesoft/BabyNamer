@@ -1,10 +1,30 @@
 class BabyList < Sequel::Model
   one_to_many :baby_ratings
   many_to_many :baby_names, :join_table => :baby_ratings
+  many_to_many :voters, :class => :User, :join_table => :baby_lists_users, :left_key => :baby_list_id, :right_key => :user_id
+  one_to_many :votes
+  many_to_one :user
 
+  def can_vote?(other_user)
+    self.user_id == other_user.id || self.voters.include?(other_user)
+  end
+
+  def add_as_voter(email)
+    u = User.get_user(email)
+    return "You can't invite yourself" if u.id == self.user_id
+    return "You have already invited #{email}" if self.voters.include?(u)
+    self.add_voter(u)
+    "Invited #{email} to be a voter on this list"
+  end
   #creates from an array of names
-  def self.create_from_list(list_name, name_list, boy_names = false)
-    c = self.create(:name => self.get_name(list_name), :boys => boy_names)
+  def self.create_from_list(user, list_name, name_list, cloneable = false)
+    boy_names = false # We have not implemented this yet
+    c = self.create(
+      :name => self.get_name(list_name),
+      :boys => boy_names,
+      :user => user,
+      :cloneable => cloneable
+    )
     new_names = name_list.dup
     #Find the names already created
     BabyName.where(:name => name_list, :boy => boy_names).all.each do |bn|
@@ -28,8 +48,13 @@ class BabyList < Sequel::Model
     actual_name
   end
 
-  def duplicate_list(new_name)
-    c = self.class.create(:name => self.class.get_name(new_name), :boys => self.boys)
+  def duplicate_list(new_name, new_user)
+    c = self.class.create(
+      :name => self.class.get_name(new_name),
+      :boys => self.boys,
+      :user => new_user,
+      :cloneable => false
+    )
     self.baby_names.each do |bn|
       c.add_baby_rating(:baby_name => bn)
     end
@@ -49,20 +74,38 @@ class BabyList < Sequel::Model
     [name1.name, name2.name]
   end
  
-  def update_tie(name1, name2)
+  def update_tie(name1, name2, voter)
     name1_rating = rating_for(name1)
     update_rank(name1, rating_for(name2), 0.5)
     update_rank(name2, name1_rating, 0.5)
+    record_vote(name1, name2, voter, 0)
   end
 
-  def update_winner(name1, name2)
+  def update_winner(name1, name2, voter)
     name1_rating = rating_for(name1)
     update_rank(name1, rating_for(name2), 1)
     update_rank(name2, name1_rating, 0)
+    winner = name_obj(name1)
+    record_vote(winner, name2, voter, winner.id)
+  end
+
+  def record_vote(name1, name2, voter, winner)
+    self.add_vote(
+      :name_1_id => name_obj(name1).id,
+      :name_2_id => name_obj(name2).id,
+      :user => voter,
+      :chosen_name => winner
+    )
   end
 
   def random_name
-    self.baby_names[rand(self.baby_names.size)]
+    if rand(100) > 90
+      choices = self.baby_ratings_dataset.eager(:baby_name).
+        reverse(:rating).limit(10).all.map(&:baby_name)
+      choices[rand(choices.size)]
+    else
+      self.baby_names[rand(self.baby_names.size)]
+    end
   end
   
   def k_factor(name)

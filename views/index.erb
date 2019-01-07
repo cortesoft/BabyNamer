@@ -1,9 +1,9 @@
 <div id='list-selection'>
-	<% if @baby_lists.size > 0 %>
+	<% if @my_baby_lists.size > 0 %>
 	<div>
-		<h2>Choose an existing baby list to start ranking</h2>
+		<h2>Choose an existing baby list to start ranking:</h2>
 		<select id="existing-lists">
-			<% @baby_lists.each do |bl| %>
+			<% @my_baby_lists.each do |bl| %>
 				<option value="<%= bl.id %>">
 					<%= bl.name %>
 				</option>
@@ -11,11 +11,12 @@
 		</select>
 		<input type="submit" value="Start Ranking" id='start-ranking'>
 	</div>
-	
+	<% end %>
+	<% if @public_baby_lists.size > 0 %>
 	<div>
-		<h2>Choose an existing baby list to duplicate:</h2>
+		<h2>Choose an existing baby list to duplicate into a new list:</h2>
 		<select id="duplicate-list">
-			<% @baby_lists.each do |bl| %>
+			<% @public_baby_lists.each do |bl| %>
 				<option value="<%= bl.id %>">
 					<%= bl.name %>
 				</option>
@@ -33,6 +34,10 @@
 			List Name: <input type='text' id='upload-new-name' />
 		</p>
 		<textarea id="name-list-field" cols="30" rows="30">Paste list here</textarea>
+		<p>
+			<input type="checkbox" value="cloneable" id="new-list-cloneable" />
+			Allow the names on the list to be copied by other users into their own list
+		</p>
 		<p>
 			<input type="submit" value="Upload" id='upload'>
 		</p>
@@ -53,6 +58,12 @@
 	<br class="clearFloat" />
 	<input type="submit" value="Display Current Results" id='display-results'>
 	<input type="submit" value="Back to List Select" class='back-to-list-select'>
+	<div id='invite-voter' style="display: none;">
+		<p>
+			Invite Voter by Email: <input type='text' id='invite-email' />
+		</p>
+		<input type="submit" value="Invite Voter" id='invite-voter-button'>
+	</div>
 </div>
 <div id="results" style="display: none;">
 	<h2>Results so far:</h2>
@@ -70,4 +81,5 @@
 	$(".back-to-choices").click(backToChoices);
 	$(".back-to-list-select").click(backToListSelect);
 	$("#upload").click(uploadList);
+	$("#invite-voter-button").click(inviteVoter);
 </script>

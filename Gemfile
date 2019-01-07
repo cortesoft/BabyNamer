@@ -5,6 +5,6 @@ gem 'sinatra'
 gem 'sequel', "~> 4.7.0"
 gem 'puma'
 gem 'json'
-gem 'sinatra_warden'
+gem 'warden'
 gem 'bcrypt'
-#gem 'rack-flash'
+gem 'sinatra-flash'

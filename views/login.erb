@@ -1,12 +1,10 @@
-<% if @errors %>
-<h2><%= @errors %></h2>
-<% end %>
+<%= styled_flash %>
 <form action="/login" method="post">
 <p>
     Email: <input type='text' name='user[email]' />
 </p>
 <p>
-    Password: <input type='text' name='user[password]' />
+    Password: <input type='password' name='user[password]' />
 </p>
 <p>
     <input type="submit" value="Login" />

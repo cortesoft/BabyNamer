@@ -100,7 +100,12 @@ displayChoice = function(data){
 	$("#name2").html(data.name2);
 	$("#list-selection").hide();
 	$("#results").hide();
-	$("#name-choice").show();
+  $("#name-choice").show();
+  if(data.am_owner){
+    $("#invite-voter").show();
+  } else {
+    $("#invite-voter").hide();
+  }
 }
 
 startRanking = function(){
@@ -139,10 +144,22 @@ backToListSelect = function(){
 uploadList = function(){
 	var list_data = {
 		list: $('#name-list-field').val(),
-		name: $('#upload-new-name').val()
+    name: $('#upload-new-name').val(),
+    cloneable: $('#new-list-cloneable').attr('checked') ? true : false
 	};
 	postData("/create_list", list_data, function(data){
 		listId = data.id;
 		getData("/display_choice/" + listId, displayChoice);
 	});
+}
+
+inviteVoter = function(){
+  var email = $('#invite-email').val();
+  var invite_data = {
+    email: email
+  };
+  postData("/invite_email/" + listId, invite_data, function(data){
+    $('#invite-email').val("");
+    alert(data.message);
+  });
 }
