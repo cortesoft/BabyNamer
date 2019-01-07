@@ -163,3 +163,7 @@ inviteVoter = function(){
     alert(data.message);
   });
 }
+
+deleteChecked = function(){
+  
+}

@@ -56,6 +56,16 @@
 		Same
 	</div>
 	<br class="clearFloat" />
+	<div class="floatLeft removeNameBlock">
+		<input type="checkbox" value="remove1" id="remove-1-checkbox" />
+	</div>
+	<div class="floatLeft removeNameBlock">
+		<input type="checkbox" value="remove2" id="remove-2-checkbox" />
+	</div>
+	<div class="floatLeft removeNameBlock">
+	<input type="submit" value="Delete Checked" id='delete-checked'>
+	</div>
+	<br class="clearFloat" />
 	<input type="submit" value="Display Current Results" id='display-results'>
 	<input type="submit" value="Back to List Select" class='back-to-list-select'>
 	<div id='invite-voter' style="display: none;">
@@ -82,4 +92,5 @@
 	$(".back-to-list-select").click(backToListSelect);
 	$("#upload").click(uploadList);
 	$("#invite-voter-button").click(inviteVoter);
+	$("#delete-checked").click(deleteChecked);
 </script>

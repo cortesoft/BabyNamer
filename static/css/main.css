@@ -35,6 +35,14 @@
 	cursor: hand;
 }
 
+.removeNameBlock {
+	border-style: solid;
+	border-color: black;
+	text-align: center;
+	width: 150px;
+	padding: 15px;
+}
+
 .nameBlock:hover {
 	background-color: yellow;
 }
