@@ -40,4 +40,8 @@ class User < Sequel::Model
   def my_lists
     (self.owned_baby_lists + self.baby_lists).uniq.sort_by(&:name)
   end
+
+  def self.admin_user
+    User[:email => "admin@admin.com"] || User.create_user("admin@admin.com", rand(99999999999999999).to_s)
+  end
 end

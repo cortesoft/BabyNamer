@@ -154,4 +154,25 @@ class BabyList < Sequel::Model
     rn.count += count_plus
     rn.save
   end
+
+  def self.create_defaults
+    u = User.admin_user
+    ["Boys", "Girls"].each do |g|
+      all_names = nil
+      [50, 100, 500, 1000, 2000, 5000, 10000].each do |n|
+        name = "Top #{n} #{g} Names"
+        unless self[:name => name]
+          puts "Creating #{name} list"
+          all_names ||= File.read(File.expand_path(File.join(File.dirname(__FILE__), "../default_names", g))).split("\n")
+          self.create_from_list(u, name, all_names[0,n], true)
+        end
+      end
+      name = "All #{g} Names"
+      unless self[:name => name]
+        puts "Creating #{name} list"
+        all_names ||= File.read(File.expand_path(File.join(File.dirname(__FILE__), "../default_names", g))).split("\n")
+        self.create_from_list(u, name, all_names, true)
+      end
+    end
+  end
 end

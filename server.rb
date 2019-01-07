@@ -20,6 +20,7 @@ DB = Sequel.connect(:adapter => 'mysql2', :host => DB_HOST, :user => DB_USERNAME
 ['models'].each do |dir|
   Dir[File.expand_path(File.dirname(__FILE__)) + "/#{dir}/*.rb"].each {|f| require f }
 end
+BabyList.create_defaults
 
 require "./warden_setup.rb"
 class BabyNamer < Sinatra::Base
