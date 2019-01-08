@@ -1,0 +1,48 @@
+version: "3"
+services:
+  web:
+    # replace username/repo:tag with your name and image details
+    image: babynamer:v0.0.4
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+    environment:
+      ROOT_PASSWORD: root
+      DB_USERNAME: babyuser
+      DB_HOST: mysql
+      DB_PASSWORD: oogabooga
+      BUILDTYPE: docker
+      DOCKER: "yes"
+    ports:
+      - "4000:4000"
+    networks:
+      - babynet
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - babynet
+  mysql:
+    image: mysql:5.7
+    restart: always
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - babynet
+networks:
+  babynet:

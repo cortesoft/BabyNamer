@@ -9,7 +9,7 @@ environment 'production'
 pidfile "#{DIR}/tmp/puma.pid"
 state_path "#{DIR}/tmp/puma.state"
 
-if ENV[BUILDTYPE] == 'docker'
+if ENV['DAEMONIZE'] == 'no'
   puts "We are in docker, not daemonizing"
   daemonize false
 else
