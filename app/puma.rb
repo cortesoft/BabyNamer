@@ -9,8 +9,13 @@ environment 'production'
 pidfile "#{DIR}/tmp/puma.pid"
 state_path "#{DIR}/tmp/puma.state"
 
-stdout_redirect "#{DIR}/logs/baby_names.log", "#{DIR}/logs/error.log", true
-daemonize true
+if ENV[BUILDTYPE] == 'docker'
+  puts "We are in docker, not daemonizing"
+  daemonize false
+else
+  stdout_redirect "#{DIR}/logs/baby_names.log", "#{DIR}/logs/error.log", true
+  daemonize
+end
 
 rackup "#{DIR}/config.ru"
 
