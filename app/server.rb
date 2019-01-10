@@ -9,6 +9,9 @@ require 'erb'
 require 'sinatra/flash'
 require 'warden'
 
+puts "ENVIRONMENT IS:"
+pp ENV
+
 DB_NAME = ENV['DB_NAME'] || 'baby_namer'
 DB_USERNAME =  ENV['DB_USERNAME'] || 'root'
 DB_HOST =  ENV['DB_HOST'] || 'localhost'
@@ -66,6 +69,18 @@ class BabyNamer < Sinatra::Base
       unless list.can_vote?(current_user)
         halt 403, "You do not have access to this list"
       end
+    end
+
+    def delete_checkbox_for(name)
+      "<td><input type='checkbox' value=\"#{name.gsub('"','')}\" class='delete-name-checkbox' /></td>"
+    end
+
+    def get_results(baby_list)
+      ratings = baby_list.baby_ratings_dataset.eager(:baby_name).order(:rating).all.reverse
+      "<table><tr><th>Name</th><th>Rating</th><th>Num Matchups</th><th>Delete</th></tr>" +
+        ratings.map {|r|
+          "<tr><td>#{r.name}</td><td>#{r.rating}</td><td>#{r.count}</td>#{delete_checkbox_for(r.name)}</tr>"
+        }.join("\n") + "</table>"
     end
   end
 
@@ -154,12 +169,7 @@ class BabyNamer < Sinatra::Base
     warden.authenticate!
     baby_list = BabyList[params[:id]]
     check_list(baby_list)
-    ratings = baby_list.baby_ratings_dataset.eager(:baby_name).order(:rating).all.reverse
-    res = "<table><tr><th>Name</th><th>Rating</th><th>Num Matchups</th></tr>" +
-    ratings.map {|r|
-      "<tr><td>#{r.name}</td><td>#{r.rating}</td><td>#{r.count}</td></tr>"
-    }.join("\n") + "</table>"
-    render_as_json({"html" => res})
+    render_as_json({"html" => get_results(baby_list)})
   end
 
   post "/invite_email/:id" do
@@ -172,6 +182,15 @@ class BabyNamer < Sinatra::Base
       message = "You can only invite people to lists you create"
     end
     render_as_json({"message" => message})
+  end
+
+  post "/delete_checked/:id" do
+    warden.authenticate!
+    baby_list = BabyList[params[:id]]
+    check_list(baby_list)
+    parsed = JSON.parse(request.env["rack.input"].read)
+    baby_list.delete_names(parsed["names"] || [])
+    render_as_json({"html" => get_results(baby_list)})
   end
 
   post "/chose/:id" do

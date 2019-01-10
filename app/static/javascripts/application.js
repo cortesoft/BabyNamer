@@ -165,5 +165,8 @@ inviteVoter = function(){
 }
 
 deleteChecked = function(){
-  
+  var checked_names = $(".delete-name-checkbox:checked").map(function() { return $(this).val(); }).get();
+  postData("/delete_checked/" + listId, {names: checked_names}, function(data){
+		$("#results-html").html(data.html);
+	});
 }

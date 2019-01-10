@@ -5,6 +5,11 @@ class BabyList < Sequel::Model
   one_to_many :votes
   many_to_one :user
 
+  def delete_names(names)
+    baby_names = self.baby_names_dataset.where(:name => names).all
+    self.baby_ratings_dataset.where(:baby_name => baby_names).delete
+  end
+
   def can_vote?(other_user)
     self.user_id == other_user.id || self.voters.include?(other_user)
   end
